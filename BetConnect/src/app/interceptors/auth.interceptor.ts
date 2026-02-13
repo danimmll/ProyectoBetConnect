@@ -4,7 +4,7 @@ import { Preferences } from '@capacitor/preferences';
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   
-  return from(Preferences.get({ key: 'token_bet' })).pipe(
+  return from(Preferences.get({ key: 'token' })).pipe(
     switchMap(tokenData => {
       const token = tokenData.value;
       

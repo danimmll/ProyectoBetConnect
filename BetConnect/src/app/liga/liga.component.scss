@@ -11,7 +11,24 @@
   display: grid;
   grid-template-columns: 230px 1fr;
 }
+.btn-detalle {
+  margin-left: 120px;
+  margin-top: 10px;
+  width: 50%;
+  border: 0;
+  border-radius: 10px;
+  height: 40px;
+  background: var(--amarillo-bet);
+  color: black;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
 
+  &:hover {
+    opacity: 0.85;
+  }
+}
 .sidebar {
   background: linear-gradient(160deg, var(--ion-color-primary) 0%, #004d39 100%);
   display: flex;

@@ -102,6 +102,9 @@
                 </div>
               </div>
               <div class="score">{{ partido.homeScore }} - {{ partido.awayScore }}</div>
+              <button type="button" class="btn-detalle" (click)="irDetalle(partido.id || partido._id)">
+                Ver Detalles
+              </button>
             </article>
           }
         </section>

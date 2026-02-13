@@ -192,4 +192,8 @@ export class LigaComponent implements OnInit {
     if (n.includes('villarreal')) return 'villarreal';
     return n;
   }
+
+    async irDetalle(idPartido: number) {
+    this.router.navigate(['/match-detail', idPartido]);
+  }
 }
