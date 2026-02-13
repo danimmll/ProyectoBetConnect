@@ -1,0 +1,7 @@
+{
+  "name": "BetConnect",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

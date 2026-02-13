@@ -1,0 +1,225 @@
+<ion-content [fullscreen]="true" class="pantalla-panel">
+  <div class="panel-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <ion-icon name="football-outline"></ion-icon>
+        </div>
+        <div>
+          <h2><span class="bet">Bet</span><span class="connect">Connect</span></h2>
+          <p>APUESTA DURISIMO</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/panel" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Panel</span>
+        </a>
+        <a routerLink="/liga" routerLinkActive="activo">
+          <ion-icon name="football-outline"></ion-icon>
+          <span>Liga</span>
+        </a>
+        <a routerLink="/ranking" routerLinkActive="activo">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <span>Ranking</span>
+        </a>
+        <a routerLink="/perfil" routerLinkActive="activo">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Mi Perfil</span>
+        </a>
+        <a routerLink="/historial" routerLinkActive="activo">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historial</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usuario">
+          <img class="usuario-avatar" [src]="avatarUsuario" [alt]="nombreUsuario" />
+          <span>{{ nombreUsuario }}</span>
+        </div>
+        <button type="button" class="btn-salir" (click)="cerrarSesion()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          Cerrar Sesion
+        </button>
+      </div>
+    </aside>
+
+    <main class="contenido">
+      <header class="cabecera">
+        <div class="cabecera-left">
+          <button type="button" class="btn-back" (click)="volver()" aria-label="Volver">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+          </button>
+          <div>
+            <h1>Detalle del Partido</h1>
+            @if (partido?.jornada) {
+              <p>Jornada {{ partido.jornada }}</p>
+            }
+          </div>
+        </div>
+      </header>
+
+      <div class="contenido-scroll">
+        @if (cargando) {
+          <div class="loading-container">
+            <ion-spinner color="warning"></ion-spinner>
+            <p>Cargando...</p>
+          </div>
+        } @else {
+          @if (partido) {
+            <div class="match-card">
+              <p class="jornada">Jornada {{ partido.jornada }}</p>
+
+              <div class="teams-container">
+                <div class="team">
+                  <button type="button" class="escudo-btn" (click)="irDetalleEquipo(partido.home)">
+                    <img [src]="getEscudo(partido.home)" class="escudo-big" [alt]="partido.home">
+                  </button>
+                  <p>{{ partido.home }}</p>
+                </div>
+
+                <div class="score-board">
+                  <div class="score">
+                    {{ partido.homeScore }} - {{ partido.awayScore }}
+                  </div>
+                  <div class="status">
+                    @if(partido.status === 'live') {
+                      <span class="live-badge">
+                        <ion-icon name="radio-outline"></ion-icon> EN VIVO {{ partido.minute }}'
+                      </span>
+                    }
+                    @else if(partido.status === 'pending') {
+                      <span>{{ partido.time }}</span>
+                    }
+                    @else {
+                      <span class="finished">FINALIZADO</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="team">
+                  <button type="button" class="escudo-btn" (click)="irDetalleEquipo(partido.away)">
+                    <img [src]="getEscudo(partido.away)" class="escudo-big" [alt]="partido.away">
+                  </button>
+                  <p>{{ partido.away }}</p>
+                </div>
+              </div>
+            </div>
+
+            @if (partido.events && partido.events.length > 0) {
+              <div class="section-container">
+                <h3 class="section-title">Minuto a Minuto</h3>
+                <div class="events-list">
+                  @for (ev of partido.events; track $index) {
+                    <div class="event-row">
+                      <div class="minute">{{ ev.minute }}'</div>
+
+                      <ion-avatar class="player-avatar">
+                        <img [src]="'https://api.dicebear.com/9.x/micah/svg?seed=' + ev.player" alt="Player">
+                      </ion-avatar>
+
+                      <div class="event-details">
+                        <div class="player-name">{{ ev.player }}</div>
+                        <div class="event-type">
+                          @if(ev.type === 'goal') { <span>Gol</span> }
+                          @else if(ev.type === 'yellow_card') { <span class="yellow">Tarjeta Amarilla</span> }
+                          @else if(ev.type === 'red_card') { <span class="red">Tarjeta Roja</span> }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (partido.status === 'pending') {
+              <ion-card class="bet-card">
+                <ion-card-header>
+                  <ion-card-subtitle>HAZ TU APUESTA</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                  <div class="bet-inputs">
+                    <ion-item lines="none" class="input-item">
+                      <ion-label position="stacked">{{ partido.home }}</ion-label>
+                      <ion-input type="number" [(ngModel)]="golesLocal" placeholder="0"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none" class="input-item">
+                      <ion-label position="stacked">{{ partido.away }}</ion-label>
+                      <ion-input type="number" [(ngModel)]="golesVisitante" placeholder="0"></ion-input>
+                    </ion-item>
+                  </div>
+
+                  <ion-button expand="block" (click)="apostar()" [disabled]="enviandoApuesta" class="bet-button">
+                    @if (enviandoApuesta) {
+                      <ion-spinner name="dots"></ion-spinner>
+                    } @else {
+                      ENVIAR PRONOSTICO
+                    }
+                  </ion-button>
+                </ion-card-content>
+              </ion-card>
+            }
+
+            <div class="section-container">
+              <div class="section-header">
+                <ion-icon name="trophy-outline"></ion-icon>
+                <h3>Clasificacion en vivo</h3>
+              </div>
+
+              @if (tablaLiga.length > 0) {
+                <div class="standings-table">
+                  <table class="tabla">
+                    <thead>
+                      <tr>
+                        <th>POS</th>
+                        <th>EQUIPO</th>
+                        <th>PJ</th>
+                        <th>G</th>
+                        <th>E</th>
+                        <th>P</th>
+                        <th>GF</th>
+                        <th>GC</th>
+                        <th>PTS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (equipo of tablaLiga; track equipo.teamName) {
+                        <tr>
+                          <td>{{ equipo.position }}</td>
+                          <td class="team-cell">
+                            <button type="button" class="escudo-round" (click)="irDetalleEquipo(equipo.teamName)">
+                              <img [src]="getEscudo(equipo.teamName)" [alt]="equipo.teamName">
+                            </button>
+                            <span class="team-name">{{ equipo.teamName }}</span>
+                          </td>
+                          <td>{{ equipo.matchesPlayed }}</td>
+                          <td>{{ equipo.wins }}</td>
+                          <td>{{ equipo.draws }}</td>
+                          <td>{{ equipo.losses }}</td>
+                          <td>{{ equipo.goalsFor }}</td>
+                          <td>{{ equipo.goalsAgainst }}</td>
+                          <td class="points">{{ equipo.points }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <div class="standings-table">
+                  <div class="no-data">No hay clasificacion disponible para este partido.</div>
+                </div>
+              }
+            </div>
+
+          } @else {
+            <div class="not-found">
+              <p>Partido no encontrado.</p>
+            </div>
+          }
+        }
+      </div>
+    </main>
+  </div>
+</ion-content>

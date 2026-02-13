@@ -1,0 +1,42 @@
+<ion-content class="contenido-pantalla">
+  <div class="contenedor-dividido">
+    
+    <section class="lado-marca">
+      <div class="centro-marca">
+        <ion-icon name="football-outline"></ion-icon>
+        <h1><span class="bet">Bet</span><span class="connect">Connect</span></h1>
+        <p>Demuestra lo que sabes de fútbol.</p>
+      </div>
+    </section>
+
+    <section class="lado-formulario">
+      <ion-card class="tarjeta-acceso">
+        <ion-card-header>
+          <ion-card-title>Bienvenido</ion-card-title>
+          <ion-card-subtitle>Inicia sesión para jugar</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-item lines="none" class="campo-entrada">
+            <ion-label position="stacked">Correo</ion-label>
+            <ion-input [(ngModel)]="credenciales.email" type="email" placeholder="Tu correo"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="campo-entrada">
+            <ion-label position="stacked">Contraseña</ion-label>
+            <ion-input [(ngModel)]="credenciales.password" type="password" placeholder="********"></ion-input>
+          </ion-item>
+
+          <ion-button expand="block" class="boton-bet" (click)="login()">
+            Entrar
+          </ion-button>
+
+          <p class="texto-pie">
+            ¿Nuevo aquí? <a routerLink="/register">Crea tu cuenta</a>
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </section>
+
+  </div>
+</ion-content>

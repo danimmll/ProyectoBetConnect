@@ -1,0 +1,49 @@
+<ion-content class="contenido-pantalla">
+  <div class="contenedor-registro">
+    
+    <section class="lado-imagen">
+      <img src="assets/imgs/fotoregister.png" alt="Fondo fútbol" />
+      <div class="texto-sobre-imagen">
+        <h2>Únete al Juego</h2>
+        <p>Crea tu cuenta y empieza a ganar.</p>
+      </div>
+    </section>
+
+    <section class="lado-formulario">
+      <ion-card class="tarjeta-registro">
+        <ion-card-header>
+          <ion-card-title>Crear Cuenta</ion-card-title>
+          <ion-card-subtitle>Es rápido y gratis</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          
+          <ion-item lines="none" class="campo-entrada">
+            <ion-label position="stacked">Usuario</ion-label>
+            <ion-input [(ngModel)]="credenciales.usuario" type="text" placeholder="Nick de jugador"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="campo-entrada">
+            <ion-label position="stacked">Correo</ion-label>
+            <ion-input [(ngModel)]="credenciales.email" type="email" placeholder="correo@ejemplo.com"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="campo-entrada">
+            <ion-label position="stacked">Contraseña</ion-label>
+            <ion-input [(ngModel)]="credenciales.password" type="password" placeholder="********"></ion-input>
+          </ion-item>
+
+          <ion-button expand="block" class="boton-verde" (click)="registrarse()">
+            Registrarme
+          </ion-button>
+
+          <p class="texto-pie">
+            ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+          </p>
+          
+        </ion-card-content>
+      </ion-card>
+    </section>
+
+  </div>
+</ion-content>

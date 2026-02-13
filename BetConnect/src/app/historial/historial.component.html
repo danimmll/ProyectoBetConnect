@@ -1,0 +1,134 @@
+<ion-content [fullscreen]="true" class="pantalla-panel">
+  <div class="panel-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <ion-icon name="football-outline"></ion-icon>
+        </div>
+        <div>
+          <h2><span class="bet">Bet</span><span class="connect">Connect</span></h2>
+          <p>APUESTA DURISIMO</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/panel" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Panel</span>
+        </a>
+        <a routerLink="/liga" routerLinkActive="activo">
+          <ion-icon name="football-outline"></ion-icon>
+          <span>Liga</span>
+        </a>
+        <a routerLink="/ranking" routerLinkActive="activo">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <span>Ranking</span>
+        </a>
+        <a routerLink="/perfil" routerLinkActive="activo">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Mi Perfil</span>
+        </a>
+        <a routerLink="/historial" routerLinkActive="activo">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historial</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usuario">
+          <img class="usuario-avatar" [src]="avatarUsuario" [alt]="nombreUsuario" />
+          <span>{{ nombreUsuario }}</span>
+        </div>
+        <button type="button" class="btn-salir" (click)="cerrarSesion()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          Cerrar Sesion
+        </button>
+      </div>
+    </aside>
+
+    <main class="contenido">
+      <header class="cabecera">
+        <div>
+          <h1>Mi Historial</h1>
+          <p>TUS PREDICCIONES</p>
+        </div>
+      </header>
+
+      @if (cargando) {
+        <div class="estado">Cargando historial...</div>
+      }
+
+      @if (!cargando && error) {
+        <div class="estado error">
+          {{ error }}
+          <button type="button" (click)="recargar()">Reintentar</button>
+        </div>
+      }
+
+      @if (!cargando && !error) {
+        <section class="resumen">
+          <article class="dato">
+            <p>Total puntos</p>
+            <strong>{{ totalPuntos }}</strong>
+          </article>
+          <article class="dato">
+            <p>Win rate</p>
+            <strong>{{ winRate }}%</strong>
+          </article>
+          <article class="dato">
+            <p>Total porras</p>
+            <strong>{{ totalPorras }}</strong>
+          </article>
+        </section>
+
+        <section class="historial-lista">
+          <h2>Ultimas predicciones</h2>
+
+          @if (apuestas.length === 0) {
+            <div class="vacio">
+              <p>Aun no has realizado ninguna prediccion.</p>
+              <a routerLink="/panel">Ir al panel</a>
+            </div>
+          }
+
+          @if (apuestas.length > 0) {
+            <div class="tabla-wrap">
+              <table class="tabla">
+                <thead>
+                  <tr>
+                    <th>PARTIDO</th>
+                    <th>TU APUESTA</th>
+                    <th>RESULTADO</th>
+                    <th>PUNTOS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (bet of apuestas; track bet.id) {
+                    <tr>
+                      <td>
+                        @if (bet.match) {
+                          {{ bet.match.home }} vs {{ bet.match.away }}
+                        } @else {
+                          Match #{{ bet.matchId }}
+                        }
+                      </td>
+                      <td>{{ bet.homeScore }} - {{ bet.awayScore }}</td>
+                      <td>
+                        @if (bet.match) {
+                          {{ bet.match.homeScore }} - {{ bet.match.awayScore }}
+                        } @else {
+                          -
+                        }
+                      </td>
+                      <td>{{ bet.pointsEarned ?? 0 }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </section>
+      }
+    </main>
+  </div>
+</ion-content>

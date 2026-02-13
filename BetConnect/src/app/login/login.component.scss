@@ -1,0 +1,109 @@
+ion-content.contenido-pantalla {
+  --background: var(--ion-background-color);
+  --overflow: hidden; 
+}
+
+.contenedor-dividido {
+  height: 100vh;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.lado-marca {
+  background: linear-gradient(160deg, var(--ion-color-primary) 0%, #004d39 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+
+  ion-icon {
+    font-size: 6rem;
+    color: var(--amarillo-bet);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 800; 
+    color: white;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .bet {
+    color: var(--amarillo-bet);
+  }
+
+  .connect{
+    color: white;
+  }
+
+  p {
+    color: var(--gris-texto);
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
+}
+
+.lado-formulario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--ion-background-color);
+  padding: 20px;
+}
+
+.tarjeta-acceso {
+  width: 100%;
+  max-width: 380px;
+  background: var(--ion-card-background);
+  border: 4px solid var(--amarillo-bet); 
+  
+  ion-card-title {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  
+  ion-card-subtitle {
+    color: var(--gris-texto);
+    margin-top: 5px;
+  }
+}
+
+.campo-entrada {
+  --background: #3a3a3a;
+  --color: white;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  border: 1px solid #444;
+
+  ion-label {
+    color: var(--amarillo-bet) !important;
+    font-weight: 600;
+  }
+}
+
+.boton-bet {
+  --background: var(--amarillo-bet);
+  --color: black; 
+  --border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 20px;
+  height: 48px;
+}
+
+.texto-pie {
+  text-align: center;
+  color: var(--gris-texto);
+  margin-top: 15px;
+  
+  a {
+    color: var(--amarillo-bet);
+    text-decoration: none;
+    font-weight: bold;
+  }
+}

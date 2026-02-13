@@ -1,0 +1,159 @@
+<ion-content [fullscreen]="true" class="pantalla-panel">
+  <div class="panel-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <ion-icon name="football-outline"></ion-icon>
+        </div>
+        <div>
+          <h2><span class="bet">Bet</span><span class="connect">Connect</span></h2>
+          <p>APUESTA DURISIMO</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/panel" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Panel</span>
+        </a>
+        <a routerLink="/liga" routerLinkActive="activo">
+          <ion-icon name="football-outline"></ion-icon>
+          <span>Liga</span>
+        </a>
+        <a routerLink="/ranking" routerLinkActive="activo">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <span>Ranking</span>
+        </a>
+        <a routerLink="/perfil" routerLinkActive="activo">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Mi Perfil</span>
+        </a>
+        <a routerLink="/historial" routerLinkActive="activo">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historial</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usuario">
+          <img class="usuario-avatar" [src]="avatarUsuario" [alt]="nombreUsuario" />
+          <span>{{ nombreUsuario }}</span>
+        </div>
+        <button type="button" class="btn-salir" (click)="cerrarSesion()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          Cerrar Sesion
+        </button>
+      </div>
+    </aside>
+
+    <main class="contenido">
+      <header class="cabecera">
+        <div>
+          <h1>Clasificacion y Resultados</h1>
+          <p>LA LIGA BETCONNECT</p>
+        </div>
+      </header>
+
+      @if (cargando) {
+        <div class="estado">Cargando clasificacion...</div>
+      }
+
+      @if (!cargando && error) {
+        <div class="estado error">
+          {{ error }}
+          <button type="button" (click)="recargar()">Reintentar</button>
+        </div>
+      }
+
+      @if (!cargando && !error) {
+        <section class="jornada-header">
+          <h2>Resultados por jornada</h2>
+          <div class="jornada-nav">
+            <button type="button" (click)="cambiarJornada(-1)" [disabled]="!puedeIrAnterior">-</button>
+            <span>
+              Jornada {{ jornadaActual }}
+              @if (jornadaActual === jornadaRealActual) {
+                <small class="chip-actual">Actual</small>
+              }
+            </span>
+            <button type="button" (click)="cambiarJornada(1)" [disabled]="!puedeIrSiguiente">+</button>
+          </div>
+        </section>
+
+        <section class="resultados-grid">
+          @for (partido of partidosJornadaActual; track partido.id) {
+            <article class="resultado-card">
+              <div class="equipos">
+                <div>
+                  <button type="button" class="escudo-round" (click)="irDetalleEquipo(partido.home)">
+                    <img [src]="getEscudo(partido.home)" [alt]="partido.home">
+                  </button>
+                  <button type="button" class="btn-equipo" (click)="irDetalleEquipo(partido.home)">
+                    <span>{{ partido.home }}</span>
+                  </button>
+                </div>
+                <div>
+                  <button type="button" class="escudo-round" (click)="irDetalleEquipo(partido.away)">
+                    <img [src]="getEscudo(partido.away)" [alt]="partido.away">
+                  </button>
+                  <button type="button" class="btn-equipo" (click)="irDetalleEquipo(partido.away)">
+                    <span>{{ partido.away }}</span>
+                  </button>
+                </div>
+              </div>
+              <div class="score">{{ partido.homeScore }} - {{ partido.awayScore }}</div>
+            </article>
+          }
+        </section>
+
+        <section class="tabla-wrap">
+          <h2>Tabla de Clasificacion</h2>
+
+          @if (tabla.length === 0) {
+            <div class="estado">No hay equipos en la tabla.</div>
+          }
+
+          @if (tabla.length > 0) {
+            <table class="tabla">
+              <thead>
+                <tr>
+                  <th>POS</th>
+                  <th>EQUIPO</th>
+                  <th>PJ</th>
+                  <th>G</th>
+                  <th>E</th>
+                  <th>P</th>
+                  <th>GF</th>
+                  <th>GC</th>
+                  <th>PTS</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (equipo of tabla; track equipo.teamName) {
+                  <tr>
+                    <td>{{ equipo.position }}</td>
+                    <td>
+                      <button type="button" class="btn-equipo" (click)="irDetalleEquipo(equipo.teamName)">
+                        <span class="escudo-round">
+                          <img [src]="getEscudo(equipo.teamName)" [alt]="equipo.teamName">
+                        </span>
+                        <span>{{ equipo.teamName }}</span>
+                      </button>
+                    </td>
+                    <td>{{ equipo.matchesPlayed }}</td>
+                    <td>{{ equipo.wins }}</td>
+                    <td>{{ equipo.draws }}</td>
+                    <td>{{ equipo.losses }}</td>
+                    <td>{{ equipo.goalsFor }}</td>
+                    <td>{{ equipo.goalsAgainst }}</td>
+                    <td>{{ equipo.points }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </section>
+      }
+    </main>
+  </div>
+</ion-content>

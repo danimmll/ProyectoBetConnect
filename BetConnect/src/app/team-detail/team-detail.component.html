@@ -1,0 +1,145 @@
+<ion-content [fullscreen]="true" class="pantalla-panel">
+  <div class="panel-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <ion-icon name="football-outline"></ion-icon>
+        </div>
+        <div>
+          <h2><span class="bet">Bet</span><span class="connect">Connect</span></h2>
+          <p>APUESTA DURISIMO</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/panel" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Panel</span>
+        </a>
+        <a routerLink="/liga" routerLinkActive="activo">
+          <ion-icon name="football-outline"></ion-icon>
+          <span>Liga</span>
+        </a>
+        <a routerLink="/ranking" routerLinkActive="activo">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <span>Ranking</span>
+        </a>
+        <a routerLink="/perfil" routerLinkActive="activo">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Mi Perfil</span>
+        </a>
+        <a routerLink="/historial" routerLinkActive="activo">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historial</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usuario">
+          <img class="usuario-avatar" [src]="avatarUsuario" [alt]="nombreUsuario" />
+          <span>{{ nombreUsuario }}</span>
+        </div>
+        <button type="button" class="btn-salir" (click)="cerrarSesion()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          Cerrar Sesion
+        </button>
+      </div>
+    </aside>
+
+    <main class="contenido">
+      <header class="cabecera">
+        <div class="cabecera-left">
+          <button type="button" class="btn-back" (click)="volver()" aria-label="Volver">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+          </button>
+          <div>
+            <h1>Detalle del Equipo</h1>
+            <p>{{ nombreEquipo }}</p>
+          </div>
+        </div>
+      </header>
+
+      @if (cargando) {
+        <div class="estado">Cargando equipo...</div>
+      }
+
+      @if (!cargando && error) {
+        <div class="estado error">
+          {{ error }}
+        </div>
+      }
+
+      @if (!cargando && !error) {
+        <section class="hero-team">
+          <div class="hero-gradient"></div>
+          <div class="hero-content">
+            <div class="logo-box">
+              <img [src]="getEscudo(nombreEquipo)" [alt]="nombreEquipo">
+            </div>
+            <div class="team-copy">
+              <h2>{{ nombreEquipo }}</h2>
+              <p>Temporada 2025/26 | La Liga BetConnect</p>
+            </div>
+            <div class="stats-rapidas">
+              <div>
+                <strong>{{ standing?.points ?? 0 }}</strong>
+                <span>Puntos</span>
+              </div>
+              <div>
+                <strong>#{{ standing?.position ?? '-' }}</strong>
+                <span>Posicion</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bloques">
+          <article class="bloque">
+            <h3>Estadisticas</h3>
+            <div class="mini-grid">
+              <div>
+                <strong>{{ victorias }}</strong>
+                <span>Victorias</span>
+              </div>
+              <div>
+                <strong>{{ empates }}</strong>
+                <span>Empates</span>
+              </div>
+              <div>
+                <strong>{{ derrotas }}</strong>
+                <span>Derrotas</span>
+              </div>
+              <div>
+                <strong>{{ standing?.goalsFor ?? 0 }}</strong>
+                <span>Goles favor</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="bloque">
+            <h3>Plantilla ({{ jugadores.length }})</h3>
+
+            @if (jugadores.length === 0) {
+              <p class="sin-jugadores">No hay jugadores para este equipo.</p>
+            }
+
+            @if (jugadores.length > 0) {
+              <div class="jugadores">
+                @for (jugador of jugadores; track jugador.id) {
+                  <div class="jugador">
+                    <div class="jugador-left">
+                      <img [src]="avatarJugador(jugador)" [alt]="jugador.name">
+                      <strong>{{ jugador.name }}</strong>
+                      <p>{{ jugador.position || 'Jugador' }}</p>
+                    </div>
+                    <span>{{ jugador.goals }} goles</span>
+                  </div>
+                }
+              </div>
+            }
+          </article>
+        </section>
+      }
+    </main>
+  </div>
+</ion-content>

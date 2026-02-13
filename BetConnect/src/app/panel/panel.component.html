@@ -1,0 +1,197 @@
+<ion-content [fullscreen]="true" class="pantalla-panel">
+  <div class="panel-layout">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <ion-icon name="football-outline"></ion-icon>
+        </div>
+        <div>
+          <h2><span class="bet">Bet</span><span class="connect">Connect</span></h2>
+          <p>APUESTA DURISIMO</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/panel" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Panel</span>
+        </a>
+        <a routerLink="/liga" routerLinkActive="activo">
+          <ion-icon name="football-outline"></ion-icon>
+          <span>Liga</span>
+        </a>
+        <a routerLink="/ranking" routerLinkActive="activo">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <span>Ranking</span>
+        </a>
+        <a routerLink="/perfil" routerLinkActive="activo">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Mi Perfil</span>
+        </a>
+        <a routerLink="/historial" routerLinkActive="activo">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historial</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usuario">
+          <img class="usuario-avatar" [src]="avatarUsuario" [alt]="nombreUsuario" />
+          <span>{{ nombreUsuario }}</span>
+        </div>
+        <button type="button" class="btn-salir" (click)="cerrarSesion()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          Cerrar Sesion
+        </button>
+      </div>
+    </aside>
+
+    <main class="contenido">
+      <header class="cabecera">
+        <div>
+          <h1>Panel de Partidos</h1>
+          <p>
+            <ion-icon name="time-outline" class="realtime-icon"></ion-icon>
+            EN TIEMPO REAL <span class="dot">|</span> {{ horaActual }}
+          </p>
+        </div>
+      </header>
+
+      <section class="acciones">
+        <label class="buscador" for="buscar-partidos">
+          <ion-icon name="search-outline"></ion-icon>
+          <input
+            id="buscar-partidos"
+            type="text"
+            [(ngModel)]="textoBuscar"
+            placeholder="Buscar equipos"
+          />
+          @if (textoBuscar) {
+            <button type="button" class="btn-limpiar" (click)="textoBuscar = ''">
+              X
+            </button>
+          }
+        </label>
+
+        <div class="filtros">
+          <button type="button"
+            [class.activo]="filtroEstado === 'todos'"
+            (click)="cambiarFiltro('todos')">
+            Todos
+          </button>
+          <button type="button"
+            [class.activo]="filtroEstado === 'pending'"
+            (click)="cambiarFiltro('pending')">
+            Próximos
+          </button>
+          <button type="button"
+            [class.activo]="filtroEstado === 'live'"
+            (click)="cambiarFiltro('live')">
+            <span class="dot-live"></span>En Vivo
+          </button>
+          <button type="button"
+            [class.activo]="filtroEstado === 'finished'"
+            (click)="cambiarFiltro('finished')">
+            Finalizados
+          </button>
+        </div>
+      </section>
+
+      <section class="titulo-bloque">
+        <h2>Partidos Disponibles</h2>
+        <p>
+          Haz tu parley de esta jornada
+          <span class="jornada-actual">| Jornada {{ jornadaActual }}</span>
+        </p>
+      </section>
+
+      @if (cargando) {
+        <div class="estado">
+          <ion-spinner name="crescent" color="light"></ion-spinner>
+          <span>Cargando partidos...</span>
+        </div>
+      }
+
+      @if (!cargando && partidosFiltrados.length === 0) {
+        <div class="estado vacio">
+          <ion-icon name="search-outline"></ion-icon>
+          <span>No hay partidos para el filtro seleccionado.</span>
+        </div>
+      }
+
+      @if (!cargando && partidosFiltrados.length > 0) {
+        <section class="grid-partidos">
+          @for (partido of partidosFiltrados; track partido.id) {
+            <article class="card-partido">
+
+              <div class="card-top">
+                <span class="matchday">MATCHDAY {{ partido.jornada }}</span>
+                <span
+                  class="estado-chip"
+                  [class.live]="partido.status === 'live'"
+                  [class.pending]="partido.status === 'pending'"
+                >
+                  @if (partido.status === 'live') {
+                    <span class="dot-live"></span>
+                  }
+                  {{ traducirEstado(partido.status) }}
+                </span>
+              </div>
+
+              <div class="marcador">
+                <div class="equipo">
+                  <div class="escudo">
+                    <img
+                      [src]="escudoEquipo(partido.home)"
+                      [alt]="partido.home"
+                    />
+                  </div>
+                  <strong>{{ partido.home }}</strong>
+                </div>
+
+                <div class="score">
+                  <span>
+                    @if (partido.status === 'pending') {
+                      VS
+                    } @else {
+                      {{ partido.homeScore }} - {{ partido.awayScore }}
+                    }
+                  </span>
+                  @if (partido.status === 'pending') {
+                    <small>{{ partido.date }} {{ partido.time }}</small>
+                  }
+                </div>
+
+                <div class="equipo">
+                  <div class="escudo">
+                    <img
+                      [src]="escudoEquipo(partido.away)"
+                      [alt]="partido.away"
+                    />
+                  </div>
+                  <strong>{{ partido.away }}</strong>
+                </div>
+              </div>
+
+              @if (partido.events && partido.events.length > 0) {
+                <div class="ultimo-evento">
+                  <p>ÚLTIMO EVENTO</p>
+                  <div>
+                    <span>{{ partido.events[partido.events.length - 1].player }} || Gol</span>
+                    <small>{{ partido.events[partido.events.length - 1].minute }}'</small>
+                  </div>
+                </div>
+              }
+
+              <button type="button" class="btn-detalle" (click)="irDetalle(partido.id || partido._id)">
+                Ver Detalles
+              </button>
+
+            </article>
+          }
+        </section>
+      }
+    </main>
+  </div>
+</ion-content>

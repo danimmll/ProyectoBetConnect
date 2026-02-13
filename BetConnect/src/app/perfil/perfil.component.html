@@ -1,0 +1,91 @@
+<ion-content [fullscreen]="true" class="pantalla-panel">
+  <div class="panel-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <ion-icon name="football-outline"></ion-icon>
+        </div>
+        <div>
+          <h2><span class="bet">Bet</span><span class="connect">Connect</span></h2>
+          <p>APUESTA DURISIMO</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <a routerLink="/panel" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+          <ion-icon name="grid-outline"></ion-icon>
+          <span>Panel</span>
+        </a>
+        <a routerLink="/liga" routerLinkActive="activo">
+          <ion-icon name="football-outline"></ion-icon>
+          <span>Liga</span>
+        </a>
+        <a routerLink="/ranking" routerLinkActive="activo">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <span>Ranking</span>
+        </a>
+        <a routerLink="/perfil" routerLinkActive="activo">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Mi Perfil</span>
+        </a>
+        <a routerLink="/historial" routerLinkActive="activo">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historial</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="usuario">
+          <img class="usuario-avatar" [src]="avatarUrlSeleccionado" [alt]="nombreUsuario" />
+          <span>{{ nombreUsuario }}</span>
+        </div>
+        <button type="button" class="btn-salir" (click)="cerrarSesion()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          Cerrar Sesion
+        </button>
+      </div>
+    </aside>
+
+    <main class="contenido">
+      <header class="cabecera">
+        <div>
+          <h1>Configuracion de Perfil</h1>
+          <p>PERSONALIZA TU CUENTA</p>
+        </div>
+        <div class="puntos-chip">{{ puntos }} pts</div>
+      </header>
+
+      <section class="perfil-wrap">
+        <article class="panel">
+          <div class="perfil-head">
+            <div class="avatar-big">
+              <img [src]="avatarUrlSeleccionado" [alt]="nombreUsuario" />
+            </div>
+            <div>
+              <h2>{{ nombreUsuario }}</h2>
+              <p>Miembro desde {{ miembroDesde }}</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h3>Detalles Publicos</h3>
+
+          <label class="label">Nombre de usuario</label>
+          <input type="text" [(ngModel)]="usernameEdit" />
+
+          <label class="label">Cambiar avatar</label>
+          <div class="avatares">
+            @for (avatar of avatares; track avatar) {
+              <button type="button" [class.activo]="avatar === avatarSeleccionado" (click)="seleccionarAvatar(avatar)">
+                <img [src]="avatarUrl(avatar)" [alt]="avatar" />
+              </button>
+            }
+          </div>
+
+          <button type="button" class="btn-guardar" (click)="guardarCambios()">Confirmar Cambios</button>
+        </article>
+      </section>
+    </main>
+  </div>
+</ion-content>
